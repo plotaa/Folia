@@ -33,4 +33,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Folia
-          path: build/libs/paper-paperclip-*-reobf.jar
+          path: build/libs/folia-paperclip-*-reobf.jar
