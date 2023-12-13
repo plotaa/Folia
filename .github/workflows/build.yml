@@ -1,4 +1,4 @@
-name: Patch and Build
+name: 打包构建
 
 on:
   push:
@@ -11,20 +11,26 @@ jobs:
     if: ${{ github.event_name != 'pull_request' || github.repository != github.event.pull_request.head.repo.full_name }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Git Repository
+      - name: 检查Git仓库
         uses: actions/checkout@v3
-      - name: Validate Gradle wrapper
+      - name: 校验Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
-      - name: Setup Gradle
+      - name: 设定Gradle
         uses: gradle/gradle-build-action@v2
-      - name: Set up JDK
+      - name: 安装JDK
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Configure Git User Details
+      - name: 上传配置
         run: git config --global user.email "actions@github.com" && git config --global user.name "Github Actions"
-      - name: Apply Patches
+      - name: 打包
         run: ./gradlew applyPatches
-      - name: Build
-        run: ./gradlew build
+      - name: 创建Folia核心
+        run: ./gradlew createReobfPaperclipJar --stacktrace
+
+      - name: 上传Folia核心
+        uses: actions/upload-artifact@v3
+        with:
+          name: Folia-1.19.4
+          path: build/libs/folia-paperclip-*-reobf.jar
